@@ -37,7 +37,7 @@ public class WebrequestKafkaAvroMessageDecoder extends LatestSchemaKafkaAvroMess
 
             reader.setSchema(schema);
 
-            return new CamusTimestampWrapper<Record>(reader.read(
+            return new CamusTimestampWrapper(reader.read(
                     null,
                     decoderFactory.jsonDecoder(
                             schema,
@@ -86,7 +86,7 @@ public class WebrequestKafkaAvroMessageDecoder extends LatestSchemaKafkaAvroMess
 
             try {
                 return (new SimpleDateFormat("[dd/MMM/yyyy:HH:mm:ss Z]").parse(timestampString).getTime());
-            } catch (NullPointerException e) {
+            } catch (Exception e) {
                     throw new RuntimeException(e);
             }
 

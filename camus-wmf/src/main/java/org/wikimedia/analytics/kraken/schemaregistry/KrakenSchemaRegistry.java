@@ -13,6 +13,6 @@ import com.linkedin.camus.schemaregistry.MemorySchemaRegistry;
 public class KrakenSchemaRegistry extends MemorySchemaRegistry<Schema> {
 	public KrakenSchemaRegistry() {
 		super();
-		super.register("varnish0", Webrequest.newBuilder().build().getSchema());
+		super.register("varnish2", Webrequest.newBuilder().build().getSchema());
 	}
 }

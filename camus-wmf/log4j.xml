@@ -11,7 +11,7 @@
  </appender>
 
  <logger name="kafka" additivity="false">
-  <level value="INTO" />
+  <level value="INFO" />
   <appender-ref ref="console" />
  </logger>
  
