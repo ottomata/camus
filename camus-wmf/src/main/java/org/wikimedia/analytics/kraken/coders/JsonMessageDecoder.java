@@ -15,19 +15,29 @@ import com.linkedin.camus.coders.MessageDecoderException;
 import org.apache.log4j.Logger;
 
 
+/**
+ * MessageDecoder class that will convert the payload into a JSON object,
+ * look for a field named 'timestamp', and then set the CamusWrapper's
+ * timestamp property to the record's timestamp.  If the JSON does not have
+ * a timestamp, then System.currentTimeMillis() will be used.
+ */
 public class JsonMessageDecoder extends MessageDecoder<byte[], String> {
 	private static org.apache.log4j.Logger log = Logger.getLogger(JsonMessageDecoder.class);
 
+	// TODO: Make this configurable.
+	private static String timestampFormat = "[dd/MMM/yyyy:HH:mm:ss Z]";
+
 	@Override
 	public CamusWrapper<String> decode(byte[] payload) {
-		long timestamp = 0;
-		String payloadString;
+		long       timestamp = 0;
+		String     payloadString;
 		JsonObject jsonObject;
 
 		payloadString =  new String(payload);
-		log.debug("Read new string:\n" + payloadString);
 
-		// parse the payload into a JsonObject.
+		log.warn("Read new string:\n" + payloadString);
+
+		// Parse the payload into a JsonObject.
 		try {
 			jsonObject = new JsonParser().parse(payloadString).getAsJsonObject();
 		} catch (RuntimeException e) {
@@ -39,7 +49,8 @@ public class JsonMessageDecoder extends MessageDecoder<byte[], String> {
 	    if (jsonObject.has("timestamp")) {
 	     	String timestampString = jsonObject.get("timestamp").getAsString();
 	     	try {
-				timestamp = new SimpleDateFormat("[dd/MMM/yyyy:HH:mm:ss Z]").parse(timestampString).getTime();
+
+				timestamp = new SimpleDateFormat(timestampFormat).parse(timestampString).getTime();
 			} catch (Exception e) {
 	        	log.error("Could not parse timestamp '" + timestampString + "' while decoding JSON message.");
 			}
